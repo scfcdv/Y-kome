@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="icon" href="https://scfcdv.github.io/homeweb2/favicon.ico">
+    <title>YouTubeコメント取得</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+    <input type="text" id="videoId" placeholder="動画のID">
+    <button onclick="getVideoComments()">コメントを取得</button>
+    <div id="commentSection"></div>
+
+    <script>
+        function getVideoComments() {
+            // YouTube Data APIキーを設定します。自分のAPIキーに置き換えてください。
+            var apiKey = 'AIzaSyDIiV_2BdLkFOkoILineb-SIxqsiTDQgS4';
+
+            // 動画のIDを取得します。
+            var videoId = document.getElementById('videoId').value;
+
+            // YouTube Data APIのエンドポイントURLを構築します。
+            var apiUrl = 'https://www.googleapis.com/youtube/v3/commentThreads?key=' + apiKey +
+                         '&videoId=' + videoId + '&part=snippet';
+
+            // APIリクエストを送信します。
+            $.get(apiUrl, function(data) {
+                var commentSection = document.getElementById('commentSection');
+                commentSection.innerHTML = '';
+
+                // コメントを表示します。
+                for (var i = 0; i < data.items.length; i++) {
+                    var comment = data.items[i].snippet.topLevelComment.snippet;
+                    var commentText = comment.textDisplay;
+                    var commentAuthor = comment.authorDisplayName;
+
+                    // コメント情報を表示します。
+                    var commentItem = document.createElement('div');
+                    commentItem.innerHTML = '<strong>' + commentAuthor + '</strong>: ' + commentText;
+                    commentSection.appendChild(commentItem);
+                }
+            });
+        }
+    </script>
+</body>
+</html>
